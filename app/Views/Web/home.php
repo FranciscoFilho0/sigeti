@@ -440,7 +440,7 @@
                             </div>
                         </div>
                         <div class="member-info text-center">
-                            <h4>Nayla Gabriele</h4>
+                            <h4>Nayla Gabriela</h4>
                             <span>Desenvolvedora</span>
                         </div>
                     </div>
