@@ -19,16 +19,14 @@ class Department extends AbstractModel
 
     protected array $required = [
         "name" => "O campo NOME é obrigatório.",
-        "code" => "O campo CÓDIGO é obrigatório.",
-        "description" => "O campo DESCRIÇÃO é obrigatório.",
-        "address" => "O campo ENDEREÇO é obrigatório."
+        "code" => "O campo CÓDIGO é obrigatório."
     ];
 
     protected bool $timestamps = true;
 
     protected bool $softDelete = true;
 
-    public function getId(): ?int
+    public function getId():int
     {
         return $this->attributes["id"];
     }
@@ -57,8 +55,12 @@ class Department extends AbstractModel
     {
         $code = trim($code);
 
-        if (strlen($code) !== 8) {
-            throw new \InvalidArgumentException("O código da escola deve ter exatamente 8 caracteres.");
+        if (strlen($code) < 2) {
+            throw new \InvalidArgumentException("O código do departamento deve ter pelo menos 2 caracteres.");
+        }
+
+        if (strlen($code) > 20) {
+            throw new \InvalidArgumentException("O código do departamento deve ter até 20 caracteres.");
         }
 
         $this->attributes["code"] = $code;
@@ -93,12 +95,12 @@ class Department extends AbstractModel
     {
         $address = trim(strip_tags($address));
 
-        if (strlen($address) < 20) {
-            throw new \InvalidArgumentException("O endereço do departamento deve ter pelo menos 20 caracteres.");
+        if (strlen($address) < 5) {
+            throw new \InvalidArgumentException("O endereço do departamento deve ter pelo menos 5 caracteres.");
         }
 
-        if (strlen($address) > 150) {
-            throw new \InvalidArgumentException("O endereço do departamento deve ter até 150 caracteres.");
+        if (strlen($address) > 100) {
+            throw new \InvalidArgumentException("O endereço do departamento deve ter até 100 caracteres.");
         }
 
         $this->attributes["address"] = $address;
