@@ -23,7 +23,7 @@ class Role extends AbstractModel
 
     protected bool $timestamps = true;
 
-    protected bool $softDeletes = true;
+    protected bool $softDelete = true;
 
     public function getId()
     {
