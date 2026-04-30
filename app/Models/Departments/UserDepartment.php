@@ -48,6 +48,9 @@ class UserDepartment extends AbstractModel
 
     public function setUserId(int $userId): void
     {
+        if ($userId < 1){
+            throw new \InvalidArgumentException("O usuario é inválido.");
+        }
         $this->attributes["user_id"] = $userId;
     }
     public function getUserId(): int
@@ -55,9 +58,12 @@ class UserDepartment extends AbstractModel
         return $this->attributes["user_id"];
     }
 
-    public function setDepartmentId(int $schoolId): void
+    public function setDepartmentId(int $departmentId): void
     {
-        $this->attributes["department_id"] = $schoolId;
+        if ($departmentId < 1){
+            throw new \InvalidArgumentException("O perfil é inválido.");
+        }
+        $this->attributes["department_id"] = $departmentId;
     }
 
     public function getDepartmentId(): int
@@ -74,7 +80,7 @@ class UserDepartment extends AbstractModel
         }
         $this->attributes["shift"] = $shift;
     }
-    public function getShift(): ?string
+    public function getShift():string
     {
         return $this->attributes["shift"];
     }
