@@ -5,6 +5,7 @@ namespace App\Controllers\Technician;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Message;
+use App\Core\Permission;
 use App\Models\Category;
 use App\Models\School;
 use App\Models\Ticket;
@@ -16,7 +17,8 @@ class TicketController extends Controller
     {
         parent::__construct("App");
 
-        Auth::requireRole(User::TECHNICIAN);
+        Auth::requirePermission(Permission::VIEW_TECHNICIAN_DASHBOARD);
+        Auth::requirePermission(Permission::VIEW_ALL_TICKETS);
     }
 
     public function index(): void
@@ -32,6 +34,8 @@ class TicketController extends Controller
 
     public function create(): void
     {
+        Auth::requirePermission(Permission::OPEN_TICKET);
+
         $schools = School::all();
         $categories = Category::all();
         $teachers = User::userByRole(User::TEACHER);
@@ -48,6 +52,8 @@ class TicketController extends Controller
 
     public function edit(?array $data): void
     {
+        Auth::requirePermission(Permission::EDIT_TICKET);
+
         $ticket = Ticket::find($data["id"]);
         $technicians = (new User)->where("role", "=", User::TECHNICIAN)->get();
 
@@ -69,6 +75,7 @@ class TicketController extends Controller
 
     public function store(?array $data): void
     {
+        Auth::requirePermission(Permission::OPEN_TICKET);
 
        $this->validateCsrfToken($data, "/tecnico/chamados/cadastrar");
 
@@ -118,6 +125,8 @@ class TicketController extends Controller
 
     public function update(?array $data): void
     {
+        Auth::requirePermission(Permission::EDIT_TICKET);
+
         $this->validateCsrfToken($data, "/tecnico/chamados/atualizar");
 
         $ticket = Ticket::find($data["id"]);
