@@ -72,7 +72,8 @@ class AuthController extends Controller
             "id" => $user->getId(),
             "name" => $user->getName(),
             "email" => $user->getEmail(),
-            "role" => $user->getRole()
+            "role" => $user->getRole(),
+            "role_id" => $user->getRoleId()git
         ]);
 
         $session->regenerate();
