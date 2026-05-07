@@ -6,9 +6,10 @@ use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Email;
 use App\Core\Message;
+use App\Core\Permission;
 use App\Core\Session;
 use App\Models\User;
-use DateTime;
+use DateTimeZone;
 
 class AuthController extends Controller
 {
@@ -19,49 +20,42 @@ class AuthController extends Controller
 
     public function index(): void
     {
-
         if (Auth::check()) {
-            if (Auth::role() === User::TECHNICIAN) {
-                redirect("/tecnico/dashboard");
-                return;
-            }
-
-            if (Auth::role() === User::TEACHER) {
-                redirect("/professor/dashboard");
-                return;
-            }
+            redirect($this->resolveHomeByPermission());
+            return;
         }
 
-        echo $this->view->render("auth/auth-login",
-            [
-                "title" => "Entrar | " . APP_NAME,
-            ]);
+        echo $this->view->render("auth/auth-login", [
+            "title" => "Entrar | " . APP_NAME
+        ]);
     }
 
     public function authenticate(?array $data): void
     {
-
         $this->validateCsrfToken($data, "/entrar");
 
-
-        if (empty($data['email'] || empty($data['password']))) {
-            Message::warning("Os campos EMAIL e SENHA são obrigatórios");
+        if (empty($data['email']) || empty($data['password'])) {
+            Message::warning("Os campos EMAIL e SENHA são obrigatorios.");
             redirect("/entrar");
             return;
         }
-
 
         $user = User::findByEmail($data['email']);
 
         if (!$user || !$user->passwordVerify($data['password'])) {
-            Message::warning("Credenciais inválidas");
+            Message::warning("Credenciais inválidas.");
             redirect("/entrar");
             return;
         }
 
-
         if ($user->getStatus() === User::INACTIVE) {
-            Message::error("Usuário INATIVO! Contate o administrador.");
+            Message::error("Usuário está INATIVO. Contate o administrador.");
+            redirect("/entrar");
+            return;
+        }
+
+        if($user->getStatus() === User::REGISTERED){
+            Message::error("Usuário apenas REGISTRADO. Contate o administrador.");
             redirect("/entrar");
             return;
         }
@@ -81,31 +75,18 @@ class AuthController extends Controller
         $user->setLastLoginAt();
         $user->save();
 
-        if ($user->getRole() === User::TECHNICIAN) {
-            Message::success("Bem-vindo(a)," . $user->getName());
-            redirect("/tecnico/dashboard");
-            return;
-        }
+        $home = $this->resolveHomeByPermission();
 
-        if ($user->getRole() === User::TEACHER) {
-            Message::success("Bem-vindo(a), Professor(a) " . $user->getName());
-            redirect("/professor/dashboard");
-            return;
-        }
-
-        $session->destroy();
-        Message::error("Perfil de acesso não reconhecido");
-        redirect("/entrar");
-        return;
-
+        Message::success("Bem-vindo(a), " . $user->getName() . "!");
+        redirect($home);
     }
 
     public function logout(?array $data): void
     {
         $session = new Session();
 
-        if (!$data || !csrf_verify($data["_csrf"] ?? null)) {
-            Message::error("Token  de segurança  Invalido");
+        if (!$data || !csrf_verify($data['_csrf'] ?? null)) {
+            Message::error("Token de segurança inválido");
 
             $authSession = $session->get("auth");
 
@@ -126,38 +107,33 @@ class AuthController extends Controller
             redirect("/entrar");
             return;
 
-        };
+        }
 
         $session->unset("auth");
-        Message::info("Sua sessão foi encerrada, Até a proxima!");
+        Message::dark("Sua sessão foi encerrada, mas volte logo!");
         redirect("/entrar");
+
     }
 
     public function create(): void
     {
-        echo $this->view->render("auth/auth-register",
-            [
-                "title" => "Cadastrar | " . APP_NAME,
-            ]);
+        echo $this->view->render("auth/auth-register", [
+            "title" => "Cadastrar | " . APP_NAME
+        ]);
     }
 
     public function store(?array $data): void
     {
-
-
         $this->validateCsrfToken($data, "/cadastrar");
 
-
         $required = [
-            "name" => "O campo NOME é obrigatorio",
-            "email" => "O campo EMAIL é obrigatorio",
-            "password" => "O campo SENHA é obrigatorio",
-            "password_confirm" => "O campo CONFIRME A SENHA é obrigatorio",
-
+            "name" => "O campo NOME é obrigatorio.",
+            "email" => "O campo EMAIL é obrigatorio.",
+            "password" => "O campo SENHA é obrigatorio.",
+            "password_confirm" => "O campo CONFIRMAR SENHA é obrigatorio.",
         ];
 
         $errors = [];
-
         foreach ($required as $value => $message) {
             if (empty($data[$value])) {
                 $errors[] = $message;
@@ -172,23 +148,20 @@ class AuthController extends Controller
             return;
         }
 
-
-        if (User::findByEmail($data["email"])) {
-            Message::warning("O email informado ja esta cadastrado");
+        if (User::findByEmail($data['email'])) {
+            Message::warning("O e-mail informado já está cadastrado.");
             redirect("/cadastrar");
             return;
         }
 
-
-        if ($data["password"] != $data["password_confirm"]) {
-            Message::warning("As senhas  não  correspondem");
+        if ($data['password'] !== $data['password_confirm']) {
+            Message::warning("As senhas não correspondem.");
             redirect("/cadastrar");
             return;
         }
 
         $data['role'] = User::TEACHER;
         $data['status'] = User::REGISTERED;
-
 
         try {
 
@@ -202,45 +175,41 @@ class AuthController extends Controller
             return;
         }
 
-        Message::success("Usuario cadastrado com sucesso. Faça login");
+        Message::success("Usuário cadastrado com sucesso. Faça Login!");
         redirect("/cadastrar/sucesso");
-        return;
-
     }
 
     public function storeSuccess(): void
     {
         echo $this->view->render("auth/auth-register-success", [
-            "title" => "Conta criada | " . APP_NAME,
+            "title" => "Conta criada | " . APP_NAME
         ]);
     }
 
     public function forgotPassword(): void
     {
-        echo $this->view->render("auth/auth-forgot-password",
-            [
-                "title" => "Redefinir Senha | " . APP_NAME,
-            ]);
+        echo $this->view->render("auth/auth-forgot-password", [
+            "title" => "Redefinir a Senha | " . APP_NAME
+        ]);
     }
 
     public function sendResetLink(?array $data): void
     {
         $this->validateCsrfToken($data, "/redefinir-senha");
 
-        if (empty($data["email"])) {
-            Message::warning("O campo Email é obrigatório");
+        if (empty($data['email'])) {
+            Message::warning("O campo EMAIL é obrigatório.");
             redirect("/redefinir-senha");
             return;
         }
 
-        $user = User::findByEmail($data["email"]);
+        $user = User::findByEmail($data['email']);
 
         if (!$user) {
-            Message::success("Se o email estiver cadastrado, você receberá o link de redefinição de senha");
+            Message::success("Se o e-mail estiver cadastrado, você receberá o link de redefinição de senha");
             redirect("/redefinir-senha");
             return;
         }
-
 
         $token = $user->setResetToken();
         $user->save();
@@ -253,21 +222,20 @@ class AuthController extends Controller
         );
 
         try {
-
             $email = new Email();
             $email->bootstrap(
-                "Redefinir Senha" . APP_NAME,
+                "Redefinir a Senha | " . APP_NAME,
                 $body,
                 $user->getEmail(),
-                $user->getName()
+                $user->getName(),
             );
 
             $email->send();
 
-            Message::success("Se o email estiver cadastrado, você receberá o link de redefinição de senha");
+            Message::success("Se o e-mail estiver cadastrado, você receberá o link de redefinição de senha");
 
         } catch (\InvalidArgumentException $invalidArgumentException) {
-            Message::error($invalidArgumentException->getMessage());
+            Message::error("Não foi possível enviar o e-mail. Tente novamente mais tarde!");
             redirect("/redefinir-senha");
             return;
         }
@@ -279,7 +247,7 @@ class AuthController extends Controller
     public function sendResetLinkSuccess(): void
     {
         echo $this->view->render("auth/auth-forgot-password-success", [
-            "title" => "Redefinir Senha | " . APP_NAME,
+            "title" => "Redefinir a Senha | " . APP_NAME
         ]);
     }
 
@@ -288,16 +256,18 @@ class AuthController extends Controller
         $user = User::findByResetToken($data['token']);
 
         $now = new \DateTimeImmutable("now", new \DateTimeZone(APP_TIMEZONE));
-        $expiration = new \DateTimeImmutable($user->getResetExpiresAt(), new \DateTimeZone(APP_TIMEZONE));
+        $expiration = new \DateTimeImmutable($user->getResetExpiresAt(), new DateTimeZone(APP_TIMEZONE));
 
         if (!$user || $now->diff($expiration)->invert === 1) {
-            Message::error("Link inválido ou expirado. Solicite novamente!");
+            Message::error("Link inválido ou expirado. Solicite novamente.");
             redirect("/redefinir-senha");
             return;
         }
 
         echo $this->view->render("auth/auth-reset-password", [
-            "title" => "Resetar Senha | " . APP_NAME,
+            "title" => "Resetar a Senha | " . APP_NAME,
+//            "token" => $user->getResetToken(),
+            "token" => $data['token']
         ]);
     }
 
@@ -305,14 +275,14 @@ class AuthController extends Controller
     {
         $this->validateCsrfToken($data, "/resetar-senha");
 
-        if (empty($data["password"]) || empty($data["password_confirm"])) {
-            Message::warning("Os campos SENHA e CONFIRMAR SENHA são obrigatorios");
+        if (empty($data['password']) || empty($data['password_confirm'])) {
+            Message::warning("Os campos SENHA e CONFIRMAR SENHA são obrigatórios.");
             redirect("/resetar-senha");
             return;
         }
 
-        if ($data["password"] !== $data["password_confirm"]) {
-            Message::warning(" As senhas não conferem ");
+        if ($data['password'] !== $data['password_confirm']) {
+            Message::warning("As senhas não conferem.");
             redirect("/resetar-senha");
             return;
         }
@@ -320,10 +290,10 @@ class AuthController extends Controller
         $user = User::findByResetToken($data['token']);
 
         $now = new \DateTimeImmutable("now", new \DateTimeZone(APP_TIMEZONE));
-        $expiration = new \DateTimeImmutable($user->getResetExpiresAt(), new \DateTimeZone(APP_TIMEZONE));
+        $expiration = new \DateTimeImmutable($user->getResetExpiresAt(), new DateTimeZone(APP_TIMEZONE));
 
         if (!$user || $now->diff($expiration)->invert === 1) {
-            Message::error("Link inválido ou expirado. Solicite novamente!");
+            Message::error("Link inválido ou expirado. Solicite novamente.");
             redirect("/redefinir-senha");
             return;
         }
@@ -331,7 +301,7 @@ class AuthController extends Controller
         try {
 
             $user->fill([
-                "password" => $data["password"],
+                "password" => $data['password'],
                 "reset_token" => null,
                 "reset_expires_at" => null,
             ]);
@@ -344,10 +314,28 @@ class AuthController extends Controller
             return;
         }
 
-        Message::success("Senha alterada com sucesso. Faça login");
+        Message::success("Senha alterada com sucesso. Faça Login.");
         redirect("/entrar");
-        return;
-
     }
 
+    private function resolveHomeByPermission(): string
+    {
+        if (Auth::hasPermission(Permission::VIEW_USERS)) {
+            return "/admin/dashboard";
+        }
+
+        if (Auth::hasPermission(Permission::VIEW_TECHNICIAN_DASHBOARD)) {
+            return "/tecnico/dashboard";
+        }
+
+        if (Auth::hasPermission(Permission::VIEW_REQUESTER_DASHBOARD)) {
+            return "/professor/dashboard";
+        }
+
+        if (Auth::hasPermission(Permission::VIEW_MANAGER_DASHBOARD)) {
+            return "/gestor/dashboard";
+        }
+
+        return "/entrar";
+    }
 }
