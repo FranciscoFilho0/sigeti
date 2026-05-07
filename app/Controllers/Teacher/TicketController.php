@@ -59,8 +59,6 @@ class TicketController extends Controller
 
     public function store(?array $data): void
     {
-        Auth::requirePermission(Permission::OPEN_TICKET);
-
         $this->validateCsrfToken($data, "/professor/chamados/cadastrar");
 
         $loggedUser = User::find(Auth::user()->id);
