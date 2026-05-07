@@ -20,6 +20,8 @@ class DashboardController extends Controller
 
     public function index(): void
     {
+        Auth::requirePermission(Permission::VIEW_TECHNICIAN_DASHBOARD);
+
        $tickets = (new Ticket())->ticketsOrderedByStatusPriorityAndOpeningDate();
         $quantityTicketsByMonth = (new Ticket())->countTicketsByMonth();
 

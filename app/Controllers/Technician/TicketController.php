@@ -23,6 +23,7 @@ class TicketController extends Controller
 
     public function index(): void
     {
+        Auth::requirePermission(Permission::VIEW_ALL_TICKETS);
         $tickets = (new Ticket())->ticketsOrderedByStatusPriorityAndOpeningDate();
 
         echo $this->view->render("technician/ticket/index", [
