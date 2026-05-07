@@ -24,7 +24,7 @@ class RolePermission extends AbstractModel
 
     protected bool $timestamps = false;
 
-    protected bool $softDeletes = false;
+    protected bool $softDelete = false;
 
     public function getId(): ?int
     {

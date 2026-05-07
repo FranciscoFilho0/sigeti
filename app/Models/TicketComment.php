@@ -22,6 +22,8 @@ class TicketComment extends AbstractModel
 
     protected bool $timestamps = true;
 
+    protected bool $softDelete = true;
+
     public function setTicketId(int $ticketId): void
     {
         $this->attributes["ticket_id"] = $ticketId;
