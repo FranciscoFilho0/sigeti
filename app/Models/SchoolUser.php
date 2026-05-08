@@ -24,7 +24,7 @@ class SchoolUser extends AbstractModel
 
     protected bool $timestamps = true;
 
-    protected bool $softDelete = true;
+    protected bool $softDelete = false;
 
     public const MORNING = "manha";
     public const AFTERNOON = "tarde";
