@@ -25,7 +25,7 @@ class UserDepartment extends AbstractModel
 
     protected bool $timestamps = true;
 
-    protected bool $softDelete = false;
+    protected bool $softDelete = true;
 
     public const MORNING = "manha";
     public const AFTERNOON = "tarde";
