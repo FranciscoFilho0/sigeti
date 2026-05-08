@@ -171,4 +171,13 @@ class Department extends AbstractModel
 
         return $errors;
     }
+
+    public function totalDepartments():string
+    {
+        $sql = "SELECT count(*) FROM {$this->table}";
+
+        $statement = $this->connection->prepare($sql);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
 }
