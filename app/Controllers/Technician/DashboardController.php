@@ -26,7 +26,7 @@ class DashboardController extends Controller
 
         $quantityTicketsByCategory = (new Ticket())->countTicketsByCategory();
         $quantityTicketsByStatus = (new Ticket())->countTicketsByStatus();
-        $avgResolutionDays = (new Ticket())->avgResolutionDaysByMonthCurrentYear();
+        $avgResolutionDays = (new Ticket())->avgResolutionDaysByMonthCurrentYear(2024);
         $ticketsByPriorityAndStatus = (new Ticket())->countByPriorityAndStatusCurrentYear();
 
 
