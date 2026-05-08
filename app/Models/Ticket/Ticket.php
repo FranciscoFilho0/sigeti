@@ -527,5 +527,15 @@ class Ticket extends AbstractModel
         return $result;
     }
 
+    public function totalOpenTickets(): string
+    {
+        $sql = "select count(*) from {$this->table} where status = 'aberto';";
+
+        $statement = $this->connection->prepare($sql);
+        $statement->execute();
+
+        return $statement->fetchColumn();
+    }
+
 
 }
