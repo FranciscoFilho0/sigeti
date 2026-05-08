@@ -128,6 +128,15 @@ class Role extends AbstractModel
 
         return $errors;
     }
+
+    public function totalRoles():string
+    {
+        $sql = "SELECT count(*) FROM {$this->table}";
+
+        $statement = $this->connection->prepare($sql);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
     
 
 }
