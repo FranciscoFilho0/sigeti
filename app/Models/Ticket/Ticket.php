@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Ticket;
 
 use App\Core\AbstractModel;
-use DateTimeZone;
+use App\Models\Category;
+use App\Models\School;
+use App\Models\SchoolUser;
+use App\Models\User;
 use PDO;
 
 class Ticket extends AbstractModel
