@@ -326,5 +326,14 @@ class User extends AbstractModel
         return $errors;
     }
 
+    public function totalUsers(string $status): string
+    {
+        $sql = "SELECT count(*) FROM {$this->table} WHERE status = :status";
+        $params = ['status' => $status];
 
+
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($params);
+        return $statement->fetchColumn();
+    }
 }
