@@ -326,14 +326,14 @@ class User extends AbstractModel
         return $errors;
     }
 
-    public function totalUsers(string $status): string
+    public function totalUsers(): string
     {
-        $sql = "SELECT count(*) FROM {$this->table} WHERE status = :status";
-        $params = ['status' => $status];
+        $sql = "SELECT count(*) FROM {$this->table} WHERE deleted_at is null and status != 'inativo'";
+
 
 
         $statement = $this->connection->prepare($sql);
-        $statement->execute($params);
+        $statement->execute();
         return $statement->fetchColumn();
     }
 }
