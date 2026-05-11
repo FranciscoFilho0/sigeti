@@ -131,7 +131,7 @@ class Role extends AbstractModel
 
     public function totalRoles():string
     {
-        $sql = "SELECT count(*) FROM {$this->table}";
+        $sql = "SELECT count(*) FROM {$this->table} WHERE deleted_at IS NULL ";
 
         $statement = $this->connection->prepare($sql);
         $statement->execute();
