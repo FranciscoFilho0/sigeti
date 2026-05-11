@@ -137,6 +137,21 @@ class Role extends AbstractModel
         $statement->execute();
         return $statement->fetchColumn();
     }
-    
+
+    public function roles():array
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE deleted_at is null";
+
+
+        $statement = $this->connection->prepare($sql);
+        $statement->execute();
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $results = [];
+        foreach ($rows as $row) {
+            $results[] = static::hydrate($row);
+        }
+
+        return $results;
+    }
 
 }
