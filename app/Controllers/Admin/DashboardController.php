@@ -28,6 +28,8 @@ class DashboardController extends Controller
         $totalRoles = (new Role())->totalRoles();
         $totalDepartments = (new Department())->totalDepartments();
         $totalOpenTickets = (new Ticket())->totalOpenTickets();
+        $recentUsers = (new User())->recentUsers();
+        $roles = (new Role())->roles();
 
 
             echo $this->view->render("admin/dashboard",
@@ -37,7 +39,8 @@ class DashboardController extends Controller
                     "totalRoles" => $totalRoles,
                     "totalDepartments" => $totalDepartments,
                     "totalOpenTickets" => $totalOpenTickets,
-
+                    "recentUsers" => $recentUsers,
+                    "roles" => $roles,
                 ]);
         }
 
