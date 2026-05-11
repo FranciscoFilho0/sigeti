@@ -24,7 +24,7 @@ class DashboardController extends Controller
     {
         Auth::requirePermission(Permission::VIEW_MANAGER_DASHBOARD);
 
-        $totalUsers = (new User())->totalUsers('ativo');
+        $totalUsers = (new User())->totalUsers();
         $totalRoles = (new Role())->totalRoles();
         $totalDepartments = (new Department())->totalDepartments();
         $totalOpenTickets = (new Ticket())->totalOpenTickets();
