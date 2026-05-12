@@ -58,4 +58,95 @@ class RoleController extends Controller
 
     }
 
+    public function store(?array $data): void {
+        Auth::requirePermission(Permission::CREATE_ROLE);
+
+        $this->validateCsrfToken($data, "/admin/perfis/cadastrar");
+
+        $newRole = new Role();
+
+
+
+        try {
+            $newRole->fill([
+                "name" => $data["name"],
+                "description" => $data["description"],
+                "is_protected" => 0
+            ]);
+
+            $errors = array_merge(
+                $newRole->validate($data),
+                $newRole->validateBusinessRule()
+            );
+            if ($errors) {
+                flash_old($data);
+                foreach ($errors as $error) {
+                    Message::warning($error);
+                }
+                redirect("/admin/perfis/cadastrar");
+                return;
+            }
+            $newRole->save();
+        } catch (\InvalidArgumentException $invalidArgumentException) {
+            Message::error($invalidArgumentException->getMessage());
+            redirect("/admin/perfis/cadastrar");
+            return;
+        }
+
+        Message::success("Perfil cadastrado com sucesso!");
+        redirect("/admin/perfis");
+    }
+
+    public function update(?array $data): void
+    {
+        Auth::requirePermission(Permission::EDIT_ROLE);
+
+        $this->validateCsrfToken($data, "/admin/perfis/cadastrar");
+
+        $role = Role::find($data['id']);
+
+        if (!$role){
+            Message::warning("perfil nao encontrado.");
+            redirect("/admin/perfis");
+            return;
+        }
+
+        if ($role->isProtected()){
+            Message::warning("Perfis protegidos não podem ser editados.");
+            redirect("/admin/perfis");
+            return;
+        }
+
+        try {
+
+            $role->fill([
+                "name" => $data["name"],
+                "description" => $data["description"],
+            ]);
+
+            $errors = array_merge(
+                $role->validate($data),
+                $role->validateBusinessRule($role->getId())
+            );
+
+            if ($errors) {
+                flash_old($data);
+                foreach ($errors as $error) {
+                    Message::warning($error);
+                    redirect("/admin/perfis/edit/". $data['id']);
+                    return;
+                }
+            }
+
+            $role->save();
+
+        }catch (\InvalidArgumentException $invalidArgumentException) {
+            Message::error($invalidArgumentException->getMessage());
+            redirect("/admin/perfis");
+            return;
+        }
+
+        Message::success("Perfil atualizado com sucesso!");
+        redirect("/admin/perfis");
+    }
 }
