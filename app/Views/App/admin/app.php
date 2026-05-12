@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? "Dashboard | Admin - " . APP_NAME ?></title>
+    <title><?= $title ?? "Dashboard | admin - " . APP_NAME ?></title>
     <link rel="shortcut icon" href="<?= assets_mazer('/assets/compiled/svg/favicon.svg') ?>" type="image/x-icon">
     <link rel="stylesheet" href="<?= assets_mazer('/assets/compiled/css/app.css') ?>">
     <link rel="stylesheet" href="<?= assets_mazer('/assets/compiled/css/app-dark.css') ?>">
@@ -20,7 +20,7 @@
             <div class="sidebar-header position-relative">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="logo">
-                        <a href="<?= url('/Admin/dashboard') ?>">
+                        <a href="<?= url('/admin/dashboard') ?>">
                             <img src="<?= assets_mazer('/assets/compiled/svg/logo.svg') ?>" alt="Logo">
                         </a>
                     </div>
@@ -65,7 +65,7 @@
                     <li class="sidebar-title">Menu</li>
 
                     <li class="sidebar-item <?= ($menuActive ?? '') === 'dashboard' ? 'active' : '' ?>">
-                        <a href="<?= url('/Admin/dashboard') ?>" class="sidebar-link">
+                        <a href="<?= url('/admin/dashboard') ?>" class="sidebar-link">
                             <i class="bi bi-speedometer2"></i>
                             <span>Dashboard</span>
                         </a>
@@ -80,10 +80,10 @@
                         </a>
                         <ul class="submenu">
                             <li class="submenu-item <?= ($menuActive ?? '') === 'usuarios' && ($submenuActive ?? '') === 'novo' ? 'active' : '' ?>">
-                                <a href="<?= url('/Admin/usuarios/cadastrar') ?>" class="submenu-link">Novo</a>
+                                <a href="<?= url('/admin/usuarios/cadastrar') ?>" class="submenu-link">Novo</a>
                             </li>
                             <li class="submenu-item <?= ($menuActive ?? '') === 'usuarios' && ($submenuActive ?? '') === 'todos' ? 'active' : '' ?>">
-                                <a href="<?= url('/Admin/usuarios') ?>" class="submenu-link">Todos</a>
+                                <a href="<?= url('/admin/usuarios') ?>" class="submenu-link">Todos</a>
                             </li>
                         </ul>
                     </li>
@@ -95,10 +95,10 @@
                         </a>
                         <ul class="submenu">
                             <li class="submenu-item <?= ($menuActive ?? '') === 'perfis' && ($submenuActive ?? '') === 'novo' ? 'active' : '' ?>">
-                                <a href="<?= url('/Admin/perfis/cadastrar') ?>" class="submenu-link">Novo</a>
+                                <a href="<?= url('/admin/perfis/cadastrar') ?>" class="submenu-link">Novo</a>
                             </li>
                             <li class="submenu-item <?= ($menuActive ?? '') === 'perfis' && ($submenuActive ?? '') === 'todos' ? 'active' : '' ?>">
-                                <a href="<?= url('/Admin/perfis') ?>" class="submenu-link">Todos</a>
+                                <a href="<?= url('/admin/perfis') ?>" class="submenu-link">Todos</a>
                             </li>
                         </ul>
                     </li>
@@ -110,10 +110,10 @@
                         </a>
                         <ul class="submenu">
                             <li class="submenu-item <?= ($menuActive ?? '') === 'departamentos' && ($submenuActive ?? '') === 'novo' ? 'active' : '' ?>">
-                                <a href="<?= url('/Admin/departamentos/cadastrar') ?>" class="submenu-link">Novo</a>
+                                <a href="<?= url('/admin/departamentos/cadastrar') ?>" class="submenu-link">Novo</a>
                             </li>
                             <li class="submenu-item <?= ($menuActive ?? '') === 'departamentos' && ($submenuActive ?? '') === 'todos' ? 'active' : '' ?>">
-                                <a href="<?= url('/Admin/departamentos') ?>" class="submenu-link">Todos</a>
+                                <a href="<?= url('/admin/departamentos') ?>" class="submenu-link">Todos</a>
                             </li>
                         </ul>
                     </li>
