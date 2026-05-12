@@ -77,7 +77,7 @@ class RolePermissionController extends Controller
         }
 
         Message::success("Permissões do perfil atualizadas com sucesso!");
-        redirect("/admin/perfis/{id}/permissoes");
+        redirect("/admin/perfis");
         return;
 
     }
