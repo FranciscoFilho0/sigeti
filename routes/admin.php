@@ -55,3 +55,27 @@ $router->post("/departamentos/cadastrar", "Admin\\DepartmentController@store");
 $router->get("/departamentos/editar/{id}", "Admin\\DepartmentController@edit");
 $router->put("/departamentos/editar/{id}", "Admin\\DepartmentController@update");
 $router->delete("/departamentos/excluir/{id}", "Admin\\DepartmentController@destroy");
+
+
+/*
+|--------------------------------------------------------------------------
+| Rotas de perfis de acesso
+|--------------------------------------------------------------------------
+*/
+
+$router->get("/perfis", "Admin\\RoleController@index");
+$router->get("/perfis/cadastrar", "Admin\\RoleController@create");
+$router->post("/perfis/cadastrar", "Admin\\RoleController@store");
+$router->get("/perfis/editar/{id}", "Admin\\RoleController@edit");
+$router->put("/perfis/editar/{id}", "Admin\\RoleController@update");
+$router->delete("/perfis/excluir/{id}", "Admin\\RoleController@destroy");
+
+
+/*
+|--------------------------------------------------------------------------
+| Rotas de perfis de acesso
+|--------------------------------------------------------------------------
+*/
+
+$router->get("/perfis/{id}/permissoes", "Admin\\RolePermissionController@edit");
+$router->post("/perfis/{id}/permissoes", "Admin\\RolePermissionController@update");
