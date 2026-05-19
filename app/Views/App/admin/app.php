@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? "Dashboard | admin - " . APP_NAME ?></title>
+    <title><?= $title ?? "Dashboard | Admin - " . APP_NAME ?></title>
     <link rel="shortcut icon" href="<?= assets_mazer('/assets/compiled/svg/favicon.svg') ?>" type="image/x-icon">
     <link rel="stylesheet" href="<?= assets_mazer('/assets/compiled/css/app.css') ?>">
     <link rel="stylesheet" href="<?= assets_mazer('/assets/compiled/css/app-dark.css') ?>">
@@ -120,21 +120,6 @@
 
                     <li class="sidebar-title">Configurações</li>
 
-                    <li class="sidebar-item has-sub <?= ($menuActive ?? '') === 'escolas' ? 'active' : '' ?>">
-                        <a href="" class="sidebar-link">
-                            <i class="bi bi-building"></i>
-                            <span>Escolas</span>
-                        </a>
-                        <ul class="submenu">
-                            <li class="submenu-item <?= ($menuActive ?? '') === 'escolas' && ($submenuActive ?? '') === 'nova' ? 'active' : '' ?>">
-                                <a href="<?= url('/tecnico/escolas/cadastrar') ?>" class="submenu-link">Nova</a>
-                            </li>
-                            <li class="submenu-item <?= ($menuActive ?? '') === 'escolas' && ($submenuActive ?? '') === 'todos' ? 'active' : '' ?>">
-                                <a href="<?= url('/tecnico/escolas') ?>" class="submenu-link">Todas</a>
-                            </li>
-                        </ul>
-                    </li>
-
                     <li class="sidebar-item has-sub <?= ($menuActive ?? '') === 'categorias' ? 'active' : '' ?>">
                         <a href="" class="sidebar-link">
                             <i class="bi bi-tag-fill"></i>
@@ -142,10 +127,10 @@
                         </a>
                         <ul class="submenu">
                             <li class="submenu-item <?= ($menuActive ?? '') === 'categorias' && ($submenuActive ?? '') === 'nova' ? 'active' : '' ?>">
-                                <a href="<?= url('/tecnico/categorias/cadastrar') ?>" class="submenu-link">Nova</a>
+                                <a href="<?= url('/admin/categorias/cadastrar') ?>" class="submenu-link">Nova</a>
                             </li>
                             <li class="submenu-item <?= ($menuActive ?? '') === 'categorias' && ($submenuActive ?? '') === 'todos' ? 'active' : '' ?>">
-                                <a href="<?= url('/tecnico/categorias') ?>" class="submenu-link">Todas</a>
+                                <a href="<?= url('/admin/categorias') ?>" class="submenu-link">Todas</a>
                             </li>
                         </ul>
                     </li>

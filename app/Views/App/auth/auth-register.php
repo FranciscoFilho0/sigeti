@@ -8,6 +8,7 @@
 <?= \App\Core\Message::render() ?>
 
 <form action="<?= url('/cadastrar') ?>" method="post">
+
     <?= csrf_input() ?>
 
     <div class="form-group position-relative has-icon-left mb-4">

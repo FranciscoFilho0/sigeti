@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Core;
 
 class Session
@@ -11,9 +10,9 @@ class Session
 
             session_set_cookie_params([
                 'lifetime' => 0,
-                'path' => '/',
-                'domain' => '',
-                'secure' => false, // mude para true em produção com HTTPS
+                'path'     => '/',
+                'domain'   => '',
+                'secure'   => false, // mude para true em produção com HTTPS
                 'httponly' => true,
                 'samesite' => 'Strict'
             ]);
