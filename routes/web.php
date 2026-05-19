@@ -5,6 +5,7 @@ use CoffeeCode\Router\Router;
 $router = new Router(APP_URL, "@");
 $router->namespace("app\Controllers");
 
+
 /*
 |--------------------------------------------------------------------------
 | Rotas da Web
@@ -13,74 +14,43 @@ $router->namespace("app\Controllers");
 $router->get("/", "WebController@index");
 
 
+/*
+|--------------------------------------------------------------------------
+| Rotas de Autenticação
+|--------------------------------------------------------------------------
+*/
 require __DIR__ . "/auth.php";
+
+
+/*
+|--------------------------------------------------------------------------
+| Rotas do Técnico
+|--------------------------------------------------------------------------
+*/
+require __DIR__ . "/technician.php";
+
+
+/*
+|--------------------------------------------------------------------------
+| Rotas do Professor
+|--------------------------------------------------------------------------
+*/
+require __DIR__ . "/teacher.php";
+
+
+/*
+|--------------------------------------------------------------------------
+| Rotas do Admin
+|--------------------------------------------------------------------------
+*/
 require __DIR__ . "/admin.php";
+
+/*
+|--------------------------------------------------------------------------
+| Rotas de Perfil
+|--------------------------------------------------------------------------
+*/
 require __DIR__ . "/profile.php";
-
-/*
-|--------------------------------------------------------------------------
-| Rotas do técnico
-|--------------------------------------------------------------------------
-*/
-
-$router->group("/tecnico");
-$router->get("/dashboard", "Technician\\DashboardController@index");
-
-//rotas das categorias
-
-$router->get("/categorias", "Technician\\CategoryController@index");
-$router->get("/categorias/cadastrar", "Technician\\CategoryController@create");
-$router->post("/categorias/cadastrar", "Technician\\CategoryController@store");
-$router->get("/categorias/editar/{id}", "Technician\\CategoryController@edit");
-$router->put("/categorias/editar/{id}", "Technician\\CategoryController@update");
-$router->delete("categorias/excluir/{id}", "Technician\\CategoryController@destroy");
-
-//rotas das escolas
-$router->get("/escolas", "Technician\\SchoolController@index");
-$router->get("/escolas/cadastrar", "Technician\\SchoolController@create");
-$router->post("/escolas/cadastrar", "Technician\\SchoolController@store");
-$router->get("/escolas/editar/{id}", "Technician\\SchoolController@edit");
-$router->put("/escolas/editar/{id}", "Technician\\SchoolController@update");
-
-
-//rotas dos usuarios
-
-$router->get("/usuarios", "Technician\\UserController@index");
-$router->get("/usuarios/cadastrar", "Technician\\UserController@create");
-$router->post("/usuarios/cadastrar", "Technician\\UserController@store");
-$router->get("/usuarios/editar/{id}", "Technician\\UserController@edit");
-$router->put("/usuarios/editar/{id}", "Technician\\UserController@update");
-
-
-// rotas dos chamados
-
-$router->get("/chamados", "Technician\\TicketController@index");
-$router->get("/chamados/cadastrar", "Technician\\TicketController@create");
-$router->post("/chamados/cadastrar", "Technician\\TicketController@store");
-$router->get("/chamados/editar/{id}", "Technician\\TicketController@edit");
-$router->put("/chamados/editar/{id}", "Technician\\TicketController@update");
-$router->get("/chamados/{ticket_id}/comentarios", "Technician\\TicketCommentController@index");
-$router->post("/chamados/{ticket_id}/comentarios", "Technician\\TicketCommentController@store");
-
-/*
-|--------------------------------------------------------------------------
-| Rotas do professor
-|--------------------------------------------------------------------------
-*/
-$router->group(null);
-$router->group("/professor");
-$router->get("/dashboard", "Teacher\\DashboardController@index");
-$router->get("/chamados", "Teacher\\TicketController@index");
-$router->get("/chamados/cadastrar", "Teacher\\TicketController@create");
-$router->post("/chamados/cadastrar", "Teacher\\TicketController@store");
-$router->get("/chamados/{ticket_id}/comentarios", "Teacher\\TicketCommentController@index");
-$router->post("/chamados/{ticket_id}/comentarios", "Teacher\\TicketCommentController@store");
-
-
-
-
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -88,10 +58,11 @@ $router->post("/chamados/{ticket_id}/comentarios", "Teacher\\TicketCommentContro
 |--------------------------------------------------------------------------
 */
 $router->group(null);
-$router->get("/erro/{errorCode}" , "ErrorController@index");
+$router->get("/erro/{errorCode}", "ErrorController@index");
 
 
 $router->dispatch();
+
 
 if ($router->error()) {
     redirect("/erro/{$router->error()}");

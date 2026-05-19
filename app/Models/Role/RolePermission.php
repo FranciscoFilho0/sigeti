@@ -6,7 +6,6 @@ use App\Core\AbstractModel;
 
 class RolePermission extends AbstractModel
 {
-
     protected string $table = "role_permissions";
 
     protected string $primaryKey = "id";
@@ -17,44 +16,43 @@ class RolePermission extends AbstractModel
     ];
 
     protected array $required = [
-        "role_id" => "O campo PERFIL é obrigatória",
-        "permission_id" => "O PERMISSÃO usuario é obrigatorio",
-
+        "role_id"       => "O campo PERFIL é obrigatório.",
+        "permission_id" => "O campo PERMISSÃO é obrigatório.",
     ];
 
     protected bool $timestamps = false;
 
     protected bool $softDelete = false;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->attributes["id"];
     }
 
-    public function setRole_id(int $role_id): void
+    public function setRoleId(int $roleId): void
     {
-        if ($role_id < 1){
-            throw new \InvalidArgumentException("O perfil é inválido.");
+        if ($roleId <= 0) {
+            throw new \InvalidArgumentException("O perfil informado é inválido.");
         }
 
-        $this->attributes["role_id"] = $role_id;
+        $this->attributes["role_id"] = $roleId;
     }
 
-    public function getRole_id(): int
+    public function getRoleId(): int
     {
         return $this->attributes["role_id"];
     }
 
-    public function setPermission_id(int $permission_id): void
+    public function setPermissionId(int $permissionId): void
     {
-        if ($permission_id < 1){
-            throw new \InvalidArgumentException("A permissão é inválida.");
+        if ($permissionId <= 0) {
+            throw new \InvalidArgumentException("A permissão informada é inválida.");
         }
 
-        $this->attributes["permission_id"] = $permission_id;
+        $this->attributes["permission_id"] = $permissionId;
     }
 
-    public function getPermission_id(): int
+    public function getPermissionId(): int
     {
         return $this->attributes["permission_id"];
     }

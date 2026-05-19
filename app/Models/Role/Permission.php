@@ -6,28 +6,27 @@ use App\Core\AbstractModel;
 
 class Permission extends AbstractModel
 {
+    protected string $table = "permissions";
 
-    protected string $table = 'permissions';
-
-    protected string $primaryKey = 'id';
+    protected string $primaryKey = "id";
 
     protected array $fillable = [
-        'name',
-        'label',
-        'group_name'
+        "name",
+        "label",
+        "group_name",
     ];
 
     protected array $required = [
-        'name' => 'O campo NOME é obrigatorio',
-        'label' => 'O campo RÓTULO é obrigatorio',
-        'group_name' => 'O campo grupo é obrigatorio',
+        "name" => "O campo NOME é obrigatório.",
+        "label" => "O campo LABEL é obrigatório.",
+        "group_name" => "O campo GRUPO é obrigatório.",
     ];
 
     protected bool $timestamps = false;
 
     protected bool $softDelete = false;
 
-    public function getId()
+    public function getId(): int
     {
         return $this->attributes["id"];
     }
@@ -37,15 +36,14 @@ class Permission extends AbstractModel
         $name = trim(strip_tags($name));
 
         if (strlen($name) < 3) {
-            throw new \InvalidArgumentException("O nome da permissão deve ter pelo menos de 3 caracteres");
+            throw new \InvalidArgumentException("O nome da permissão deve ter pelo menos 3 caracteres.");
         }
 
         if (strlen($name) > 100) {
-            throw new \InvalidArgumentException("O nome da permissão deve ter até de 100 caracteres");
+            throw new \InvalidArgumentException("O nome da permissão deve ter no máximo 100 caracteres.");
         }
 
         $this->attributes["name"] = $name;
-
     }
 
     public function getName(): string
@@ -57,13 +55,14 @@ class Permission extends AbstractModel
     {
         $label = trim(strip_tags($label));
 
-        if (strlen($label) < 15) {
-            throw new \InvalidArgumentException("A descrição da permissão deve ter pelo menos de 15 caracteres");
+        if (strlen($label) < 3) {
+            throw new \InvalidArgumentException("O label da permissão deve ter pelo menos 3 caracteres.");
         }
 
-        if (strlen($label) < 150) {
-            throw new \InvalidArgumentException("A descrição da permissão deve ter até de 150 caracteres");
+        if (strlen($label) > 150) {
+            throw new \InvalidArgumentException("O label da permissão deve ter no máximo 150 caracteres.");
         }
+
         $this->attributes["label"] = $label;
     }
 
@@ -72,17 +71,16 @@ class Permission extends AbstractModel
         return $this->attributes["label"];
     }
 
-
     public function setGroupName(string $groupName): void
     {
         $groupName = trim(strip_tags($groupName));
 
-        if (strlen($groupName) < 3) {
-            throw new \InvalidArgumentException("O nome da grupo deve ter pelo menos de 3 caracteres");
+        if (strlen($groupName) < 2) {
+            throw new \InvalidArgumentException("O grupo deve ter pelo menos 2 caracteres.");
         }
 
         if (strlen($groupName) > 100) {
-            throw new \InvalidArgumentException("O nome da gropo deve ter até de 100 caracteres");
+            throw new \InvalidArgumentException("O grupo deve ter no máximo 100 caracteres.");
         }
 
         $this->attributes["group_name"] = $groupName;
@@ -96,7 +94,7 @@ class Permission extends AbstractModel
     public function groupedByGroup(): array
     {
         $sql = "SELECT id, name, label, group_name
-                FROM {$this->table}
+                FROM permissions
                 ORDER BY group_name, label";
 
         $statement = $this->connection->prepare($sql);
@@ -110,5 +108,4 @@ class Permission extends AbstractModel
 
         return $grouped;
     }
-
 }

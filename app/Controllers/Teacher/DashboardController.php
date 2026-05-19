@@ -9,7 +9,6 @@ use App\Models\Ticket\Ticket;
 
 class DashboardController extends Controller
 {
-
     public function __construct()
     {
         parent::__construct("App");
@@ -17,25 +16,23 @@ class DashboardController extends Controller
         Auth::requirePermission(Permission::VIEW_REQUESTER_DASHBOARD);
     }
 
-    public function index():void
-
+    public function index(): void
     {
+        Auth::requirePermission(Permission::VIEW_REQUESTER_DASHBOARD);
+
         $ticketModel = new Ticket();
         $userId = Auth::user()->id;
 
-        $tickets = (new Ticket())->ticketsOrderedByStatusPriorityAndOpeningDateByUser(Auth::user()->id);
-        $quantityTicketsByStatus = $ticketModel->countTicketsByStatus($userId) ;
+        $tickets = $ticketModel->ticketsOrderedByStatusPriorityAndOpeningDateByUser(Auth::user()->id);
+        $quantityTicketsByStatus = $ticketModel->countTicketsByStatus($userId);
         $quantityTicketsByMonth = $ticketModel->countTicketsByMonth($userId);
         $quantityTicketsByCategory = $ticketModel->countTicketsByCategory($userId);
 
-        echo $this->view->render("teacher/dashboard",
-            [
-                "title" => "Dashboard | Professor(a)" . APP_NAME,
-                "tickets" => $tickets,
-                "quantityTicketsByStatus" => $quantityTicketsByStatus,
-                "quantityTicketsByMonth" => $quantityTicketsByMonth,
-                "quantityTicketsByCategory" => $quantityTicketsByCategory,
-            ]);
+        echo $this->view->render("teacher/dashboard", [
+            "tickets" => $tickets,
+            "quantityTicketsByStatus" => $quantityTicketsByStatus,
+            "quantityTicketsByMonth" => $quantityTicketsByMonth,
+            "quantityTicketsByCategory" => $quantityTicketsByCategory,
+        ]);
     }
-
 }

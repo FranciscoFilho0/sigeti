@@ -5,13 +5,13 @@
 <h1 class="auth-title">Esqueceu a senha?</h1>
 <p class="auth-subtitle mb-5">Informe seu e-mail para receber o link de recuperação.</p>
 
-<?= \App\Core\Message::render()?>
+<?= \App\Core\Message::render() ?>
 
 <form action="<?= url('/redefinir-senha') ?>" method="post">
-
-    <?= csrf_input() ?>
-
     <div class="form-group position-relative has-icon-left mb-4">
+
+        <?= csrf_input() ?>
+
         <input type="email" name="email" class="form-control form-control-xl" placeholder="Email" required>
         <div class="form-control-icon">
             <i class="bi bi-envelope"></i>

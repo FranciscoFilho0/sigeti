@@ -1,4 +1,4 @@
-<?= $this->layout('Admin/app', [
+<?= $this->layout('admin/app', [
     'title' => $title ?? "Dashboard | Admin - " . APP_NAME,
     'menuActive' => 'dashboard',
 ]) ?>
@@ -106,7 +106,7 @@
                             <i class="bi bi-people-fill me-2"></i>
                             Usuários recentes
                         </h5>
-                        <a href="<?= url('/Admin/usuarios') ?>" class="btn btn-sm btn-primary">
+                        <a href="<?= url('/admin/usuarios') ?>" class="btn btn-sm btn-primary">
                             Ver todos
                         </a>
                     </div>
@@ -166,7 +166,7 @@
                             <i class="bi bi-shield-fill me-2"></i>
                             Perfis cadastrados
                         </h5>
-                        <a href="<?= url('/Admin/perfis') ?>" class="btn btn-sm btn-primary">
+                        <a href="<?= url('/admin/perfis') ?>" class="btn btn-sm btn-primary">
                             Ver todos
                         </a>
                     </div>
@@ -181,8 +181,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php if (!empty($roles)): ?>
-                                    <?php foreach ($roles as $role): ?>
+                                <?php if (!empty($recentRoles)): ?>
+                                    <?php foreach ($recentRoles as $role): ?>
                                         <tr>
                                             <td>
                                                 <i class="bi bi-shield-fill text-primary me-1"></i>
